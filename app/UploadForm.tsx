@@ -49,6 +49,8 @@ export default function UploadForm({ code, anonKey }: { code: string; anonKey: s
   const [items, setItems] = useState<Item[]>([]);
   const [guest, setGuest] = useState("");
   const guestRef = useRef("");
+  const [message, setMessage] = useState("");
+  const messageRef = useRef("");
   const running = useRef(new Set<string>());
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -82,7 +84,7 @@ export default function UploadForm({ code, anonKey }: { code: string; anonKey: s
             const c = await fetch("/api/complete", {
               method: "POST",
               headers: { "content-type": "application/json" },
-              body: JSON.stringify({ code, path: res.path, name: file.name, type: file.type, size: file.size, guest: guestRef.current }),
+              body: JSON.stringify({ code, path: res.path, name: file.name, type: file.type, size: file.size, guest: guestRef.current, message: messageRef.current }),
             }).catch(() => null);
             if (c?.ok) break;
             await sleep(1000);
@@ -164,6 +166,20 @@ export default function UploadForm({ code, anonKey }: { code: string; anonKey: s
             }}
             maxLength={80}
             autoComplete="name"
+            className="mt-1 w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-base"
+          />
+        </label>
+
+        <label className="mt-4 block text-sm">
+          <Bi es="Un mensaje para los novios (opcional)" en="A message for the couple (optional)" />
+          <textarea
+            value={message}
+            onChange={(e) => {
+              setMessage(e.target.value);
+              messageRef.current = e.target.value;
+            }}
+            maxLength={500}
+            rows={3}
             className="mt-1 w-full rounded-lg border border-black/20 bg-white px-3 py-2 text-base"
           />
         </label>

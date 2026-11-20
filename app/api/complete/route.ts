@@ -17,6 +17,7 @@ export async function POST(req: Request) {
 
   const name = String(body.name ?? "").slice(0, 200);
   const guest = String(body.guest ?? "").trim().slice(0, 80) || null;
+  const message = String(body.message ?? "").trim().slice(0, 500) || null;
   const meta = (obj.metadata ?? {}) as { size?: number; mimetype?: string };
   const { error } = await sb.from("wedding_uploads").upsert(
     {
@@ -25,6 +26,7 @@ export async function POST(req: Request) {
       mime_type: meta.mimetype ?? resolveType(name, String(body.type ?? "")) ?? "application/octet-stream",
       size_bytes: meta.size ?? Number(body.size) ?? 0,
       guest_name: guest,
+      message,
     },
     { onConflict: "storage_path", ignoreDuplicates: true },
   );

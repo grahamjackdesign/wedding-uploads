@@ -13,6 +13,7 @@ type Row = {
   mime_type: string;
   size_bytes: number;
   guest_name: string | null;
+  message: string | null;
   created_at: string;
 };
 
@@ -94,6 +95,11 @@ async function AdminInner({
               </div>
               <figcaption className="p-2 text-xs">
                 <div className="truncate">{r.guest_name ?? "—"}</div>
+                {r.message && (
+                  <div className="mt-1 line-clamp-3 whitespace-pre-wrap italic" title={r.message}>
+                    {r.message}
+                  </div>
+                )}
                 <div className="opacity-60">{(r.size_bytes / 1048576).toFixed(1)} MB</div>
                 {dl && (
                   <a href={dl} className="underline">
